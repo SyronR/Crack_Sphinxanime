@@ -1,0 +1,35 @@
+DOCUMENTACION SOBRE EL PROGRAMA 'crackSphinxanime':
+
+
+- ¿¿Como Funciona??
+
+El funcionamiento de la aplicacion es muy simple. Basicamente el programa toma la 
+ruta 'https://box.sphinxanime.net/?v=' y crea un contador que sera el numero final
+que introduza. Una vez que el programa inicie, dependiendo de la eleccion del usuario,
+buscara de manera completa o concreta. De ambas maneras, lo que hara sera ir incrementando
+ese contador si la pagina que ha encontrado no esta vacia y si no lo esta, guarda un H3 que
+contiene el nombre del anime que tiene esa pagina. En caso de que este vacia, avisara al 
+usuario de que no se ha encontrado la pagina con ese contador. ¿Desea finalizar?
+
+Si el usuario indica que si, finaliza la busqueda indicando si quiere guardar los resultados,
+en caso contrario no los guardara. 
+
+Una vez que haya terminado todo, en el registro quedaran guardados los numeros que contienen
+los animes de interes o que numero guarda el anime.
+
+El URL de acceso es el siguiente: 'https://box.sphinxanime.net/?v='. Añadele el numero que te
+interese al final.
+
+
+- ¿¿Se necesita algo más??
+
+No se requiere de nada. Simplemente te lo decargas y ya te dejo un archivo compilado en JAVA 8,
+para que simplemente cliques en el y lo utilices.
+
+
+
+** IMPORTANTE: Cuando vayas a guardarlo en un archivo, debes escribir '.txt' al final, porque en
+caso de no hacerlo, no se guardara y tendras que volver a hacerlo. 
+
+NO ME HAGO RESPONSABLE DE CUALQUIER CARGO POR MAL USO QUE SE LE DE A ESTA APLICACIÓN. LA DISEÑE
+PARA APRENDER Y EXPLORAR SOBRE EL MUNDO DE JAVA, NO PARA PROVOCAR ATAQUES A PAGINAS WEB **
