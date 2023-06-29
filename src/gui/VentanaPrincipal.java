@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +11,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -40,6 +42,9 @@ public class VentanaPrincipal extends JFrame {
 		this.gestor = gestor;
 		busquedaCompleta = true;
 		
+		/* Centrado de pantalla */
+		centrarPantalla();
+		
 		/* Cierre en Cascada */
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -50,7 +55,7 @@ public class VentanaPrincipal extends JFrame {
 			gestor.error("ERROR: No se ha podido establecer el Look & Feel (Ventana Principal)");
 		}
 		
-		setSize(new Dimension(320, 210));
+		setSize(new Dimension(320, 260));
 		setTitle("Crakeador Sphinxanime");
 		setResizable(false);
 		
@@ -117,14 +122,53 @@ public class VentanaPrincipal extends JFrame {
 					.addContainerGap(13, Short.MAX_VALUE))
 		);
 		panel_1_1.setLayout(gl_panel_1_1);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Lista negra de URLs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		JButton botonInsertarURL = new JButton("Añadir URL");
+		botonInsertarURL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				insertarURL();
+			}
+		});
+		
+		JButton botonEliminarURL = new JButton("Eliminar URL");
+		botonEliminarURL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarURL();
+			}
+		});
+		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
+		gl_panel_2.setHorizontalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 289, Short.MAX_VALUE)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(botonInsertarURL, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(botonEliminarURL, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_panel_2.setVerticalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 48, Short.MAX_VALUE)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+						.addComponent(botonInsertarURL)
+						.addComponent(botonEliminarURL))
+					.addContainerGap(15, Short.MAX_VALUE))
+		);
+		panel_2.setLayout(gl_panel_2);
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_1_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
-						.addComponent(panel_1, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 289, GroupLayout.PREFERRED_SIZE))
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+						.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 289, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel_1_1, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
@@ -132,9 +176,11 @@ public class VentanaPrincipal extends JFrame {
 				.addGroup(gl_panel.createSequentialGroup()
 					.addGap(9)
 					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel_1_1, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(31, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		
 		JButton botonCompleto = new JButton("Completa");
@@ -187,6 +233,22 @@ public class VentanaPrincipal extends JFrame {
 	// METODOS ///////////////////////////////
 	//////////////////////////////////////////
 	
+	private void centrarPantalla() {
+		
+        // Obtener el tamaño de la pantalla
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Obtener el tamaño de la ventana
+        Dimension windowSize = getSize();
+
+        // Calcular la posición centrada
+        int posX = (screenSize.width - windowSize.width) / 3;
+        int posY = (screenSize.height - windowSize.height) / 3;
+
+        // Establecer la posición centrada
+        setLocation(posX, posY);
+	}
+	
 	private void setearBusquedaCompletaTrue() {
 		busquedaCompleta = true;
 		campoBusqueda.setEnabled(false);
@@ -228,6 +290,28 @@ public class VentanaPrincipal extends JFrame {
 			} else {
 				gestor.advertencia("El patrón de busqueda no puede estar vacio");
 			}
+		}
+	}
+	
+	private void insertarURL() {
+		try {
+			Short url = Short.parseShort( JOptionPane.showInputDialog("Inserte la URL que desea restringir") );
+			
+			gestor.getArrancador().getListaNegra().insertarURL(url);
+			
+		} catch (NumberFormatException e) {
+			
+		}
+	}
+	
+	private void eliminarURL() {
+		try {
+			Short url = Short.parseShort( JOptionPane.showInputDialog("Inserte la URL que desea eliminar") );
+			
+			gestor.getArrancador().getListaNegra().eliminarURL(url);
+			
+		} catch (NumberFormatException e) {
+			
 		}
 	}
 }

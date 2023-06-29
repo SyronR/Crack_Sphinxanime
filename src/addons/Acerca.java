@@ -22,9 +22,9 @@ public class Acerca {
 
 	public Acerca(Arrancador main) {
 		desarrollador = "Alberto Gálvez / Syron Power";
-		version = "1.0 (Semillas)";
+		version = "2.0 (Raices)";
 		correo = "galvezssr@gmail.com / syronpower@gmail.com";
-		cambios = "Compilado en Java 8";
+		cambios = "Implementada una lista negra de URLs y mejoras menores";
 		enlace = "https://box.sphinxanime.net/?v=";
 
 		this.main = main;

@@ -12,6 +12,7 @@ public class Arrancador {
 	private GestorVentanas gestor;
 	private Buscador buscador;
 	private Acerca acerca;
+	private ListaNegra listaNegra;
 	
 	//////////////////////////////////////////
 	// CONSTRUCTOR ///////////////////////////
@@ -20,6 +21,7 @@ public class Arrancador {
 	public Arrancador() {
 		acerca = new Acerca(this);
 		gestor = new GestorVentanas(this);
+		listaNegra = new ListaNegra(this);
 		buscador = new Buscador(this);
 	}
 	
@@ -58,4 +60,13 @@ public class Arrancador {
 	public void setAcerca(Acerca acerca) {
 		this.acerca = acerca;
 	}
+
+	public ListaNegra getListaNegra() {
+		return listaNegra;
+	}
+
+	public void setListaNegra(ListaNegra listaNegra) {
+		this.listaNegra = listaNegra;
+	}
+	
 }

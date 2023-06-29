@@ -34,7 +34,7 @@ public class Buscador {
 		this.arrancador = arrancador;
 		this.gestorArchivos = arrancador.getGestor().getGestorArchivos();
 		this.filtroTxt = new FileNameExtensionFilter("Fichero de texto plano", "txt");
-		
+
 		gestorArchivos.setFileFilter(filtroTxt);
 	}
 
@@ -85,6 +85,7 @@ class Hilo extends Thread {
 
 		// VARIABLES /////////////////////////////////////////////////////////
 
+		boolean datosImpresos = false;
 		short contador = 1;
 
 		Document paginaWeb;
@@ -92,7 +93,7 @@ class Hilo extends Thread {
 		String frasePaginaWeb;
 		String frase;
 		String resultados = "";
-		
+
 		File archivo;
 		Integer valor;
 
@@ -105,68 +106,81 @@ class Hilo extends Thread {
 			if (palabrasClaves.isEmpty()) {
 
 				arrancador.getGestor().getVentanaRegistro().escribirEnRegistro("\nIniciando Busqueda Completa... \n\n");
-				
+
 				/* Mientras que finalizar sea false, seguiremos recorriendo */
 				while (Buscador.getFinalizar() == false) {
 
-					paginaWeb = Jsoup.connect("https://box.sphinxanime.net/?v=" + contador).get();
-					h3PaginaWeb = paginaWeb.select(".content h3");
+					/** Comparacion de la lista negra **/
+					if (!arrancador.getListaNegra().getListaNegra().contains(contador)) {
 
-					/* Si la frase de la pagina web no esta vacia, se lee y se guarda */
-					if (!h3PaginaWeb.toString().equals("")) {
+						paginaWeb = Jsoup.connect("https://box.sphinxanime.net/?v=" + contador).get();
+						h3PaginaWeb = paginaWeb.select(".content h3");
 
-						frasePaginaWeb = h3PaginaWeb.toString().substring(4, h3PaginaWeb.toString().length() - 5);
-						frase = "URL: " + contador + " // " + frasePaginaWeb + "\n";
+						/* Si la frase de la pagina web no esta vacia, se lee y se guarda */
+						if (!h3PaginaWeb.toString().equals("")) {
 
-						arrancador.getGestor().getVentanaRegistro().escribirEnRegistro(frase);
-						resultados += frase;
+							frasePaginaWeb = h3PaginaWeb.toString().substring(4, h3PaginaWeb.toString().length() - 5);
+							frase = "URL: " + contador + " // " + frasePaginaWeb + "\n";
 
-					} else {
+							arrancador.getGestor().getVentanaRegistro().escribirEnRegistro(frase);
+							resultados += frase;
 
-						/* Si le damos a Si, paramos la busqueda */
-						if (JOptionPane.showConfirmDialog(null, "¿La página con número '" + contador
-								+ "' está vacía, desea terminar la búsqueda?") == 0)
-							Buscador.setFinalizar(true);
-						else
-							Buscador.setFinalizar(false);
-					}
+						} else {
+
+							/* Si le damos a Si, paramos la busqueda */
+							if (JOptionPane.showConfirmDialog(null, "¿La página con número '" + contador
+									+ "' está vacía, desea terminar la búsqueda?") == 0)
+								Buscador.setFinalizar(true);
+							else
+								Buscador.setFinalizar(false);
+						}
+
+					} else
+						arrancador.getGestor().getVentanaRegistro().escribirEnRegistro("Omitiendo URL: " + contador + "\n");
 
 					contador++;
 				}
 
 			} else {
-				
+
 				/* Si no esta vacio, implica que el modo de busqueda sea concreto */
-				arrancador.getGestor().getVentanaRegistro().escribirEnRegistro("\nIniciando Busqueda Concreta (" + palabrasClaves + ")... \n\n");
-				
+				arrancador.getGestor().getVentanaRegistro()
+						.escribirEnRegistro("\nIniciando Busqueda Concreta (" + palabrasClaves + ")... \n\n");
+
 				/* Mientras que finalizar sea false, seguiremos recorriendo */
 				while (Buscador.getFinalizar() == false) {
 
-					paginaWeb = Jsoup.connect("https://box.sphinxanime.net/?v=" + contador).get();
-					h3PaginaWeb = paginaWeb.select(".content h3");
+					/** Comparacion de la lista negra **/
+					if (!arrancador.getListaNegra().getListaNegra().contains(contador)) {
 
-					/* Si la frase de la pagina web no esta vacia, se lee y se guarda */
-					if (!h3PaginaWeb.toString().equals("")) {
+						paginaWeb = Jsoup.connect("https://box.sphinxanime.net/?v=" + contador).get();
+						h3PaginaWeb = paginaWeb.select(".content h3");
 
-						frasePaginaWeb = h3PaginaWeb.toString().substring(4, h3PaginaWeb.toString().length() - 5);
-						frase = "URL: " + contador + " // " + frasePaginaWeb + "\n";
+						/* Si la frase de la pagina web no esta vacia, se lee y se guarda */
+						if (!h3PaginaWeb.toString().equals("")) {
 
-						if (frasePaginaWeb.contains(palabrasClaves)) {
+							frasePaginaWeb = h3PaginaWeb.toString().substring(4, h3PaginaWeb.toString().length() - 5);
+							frase = "URL: " + contador + " // " + frasePaginaWeb + "\n";
 
-							arrancador.getGestor().getVentanaRegistro().escribirEnRegistro(frase);
-							resultados += frase;
+							if (frasePaginaWeb.contains(palabrasClaves)) {
 
+								arrancador.getGestor().getVentanaRegistro().escribirEnRegistro(frase);
+								resultados += frase;
+
+							}
+
+						} else {
+
+							/* Si le damos a Si, paramos la busqueda */
+							if (JOptionPane.showConfirmDialog(null, "¿La página con número '" + contador
+									+ "' está vacía, desea terminar la búsqueda?") == 0)
+								Buscador.setFinalizar(true);
+							else
+								Buscador.setFinalizar(false);
 						}
 
-					} else {
-
-						/* Si le damos a Si, paramos la busqueda */
-						if (JOptionPane.showConfirmDialog(null, "¿La página con número '" + contador
-								+ "' está vacía, desea terminar la búsqueda?") == 0)
-							Buscador.setFinalizar(true);
-						else
-							Buscador.setFinalizar(false);
-					}
+					} else 
+						arrancador.getGestor().getVentanaRegistro().escribirEnRegistro("Omitiendo URL: " + contador + "\n");
 
 					contador++;
 				}
@@ -176,29 +190,31 @@ class Hilo extends Thread {
 		} catch (IOException e) {
 			arrancador.getGestor().error("EXCEPCION: Se ha producido una excepción al buscar en la pagina web");
 		}
-		
+
 		arrancador.getGestor().getVentanaRegistro().escribirEnRegistro("\nBusqueda Finalizada");
-		
+
 		/* Guardar el resultado en un fichero */
 		if (JOptionPane.showConfirmDialog(gestorArchivos, "¿Desea guardar el resultado en un archivo?") == 0) {
-			valor = gestorArchivos.showSaveDialog(null);
-			
-			if (valor == JFileChooser.APPROVE_OPTION && gestorArchivos.getSelectedFile().getName().endsWith(".txt")) {
-				archivo = gestorArchivos.getSelectedFile();
+			while (datosImpresos == false) {
 				
-				try (BufferedWriter escritura = new BufferedWriter(new FileWriter(archivo, false))) {
+				valor = gestorArchivos.showSaveDialog(null);
+				if (valor == JFileChooser.APPROVE_OPTION && gestorArchivos.getSelectedFile().getName().endsWith(".txt")) {
+					archivo = gestorArchivos.getSelectedFile();
 
-					escritura.write(resultados);
-					arrancador.getGestor().mensaje("Resultados exportados con exito");
+					try (BufferedWriter escritura = new BufferedWriter(new FileWriter(archivo, false))) {
 
-				} catch (IOException e) {
-					arrancador.getGestor().error("ERROR: Se ha producido un error inesperado al exportar los resultados");
+						escritura.write(resultados);
+						arrancador.getGestor().mensaje("Resultados exportados con exito");
+						datosImpresos = true;
+
+					} catch (IOException e) {
+						arrancador.getGestor().error("ERROR: Se ha producido un error inesperado al exportar los resultados");
+					}
+
+				} else {
+					arrancador.getGestor().error("ERROR: El fichero tiene que terminar con la extensión .txt");
 				}
-				
-			} else {
-				arrancador.getGestor().error("ERROR: El fichero tiene que terminar con la extensión .txt");
 			}
 		}
-
 	}
 }

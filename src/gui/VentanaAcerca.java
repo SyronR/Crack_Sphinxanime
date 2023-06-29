@@ -31,7 +31,7 @@ public class VentanaAcerca extends JDialog {
 	
 	public VentanaAcerca(GestorVentanas gestor) {
 		this.gestor = gestor;
-		
+				
 		setResizable(false);
 		setSize(new Dimension(350, 300));
 		setTitle("Acerca de: " + gestor.getVentanaPrincipal().getTitle());
